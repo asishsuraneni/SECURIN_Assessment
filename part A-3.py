@@ -1,21 +1,14 @@
-# Initialize dictionary to store probabilities
-probabilities = {}
+def calculate_probabilities():
+    total_combinations = 36
+    probabilities = [0] * 11  # Sums range from 2 to 12
 
-# Calculate probability for each sum
-for die_a in range(1, 7):
-    for die_b in range(1, 7):
-        total = die_a + die_b
-        if total not in probabilities:
-            probabilities[total] = 1
-        else:
-            probabilities[total] += 1
+    for i in range(1, 7):
+        for j in range(1, 7):
+            sum_value = i + j
+            probabilities[sum_value - 2] += 1
 
-# Normalize probabilities by dividing by total combinations
-total_combinations = 6 * 6
-for key in probabilities:
-    probabilities[key] /= total_combinations
+    for sum_value in range(2, 13):
+        print(f"P(Sum = {sum_value}) = {probabilities[sum_value - 2]}/{total_combinations}")
 
-# Print probabilities
-print("Probability of each possible sum:")
-for key, value in probabilities.items():
-    print(f"P(Sum = {key}) = {value:.2f}")
+if __name__ == "__main__":
+    calculate_probabilities()
