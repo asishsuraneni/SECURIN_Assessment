@@ -1,49 +1,37 @@
-def undoom_dice(die_a, die_b):
-    # Initialize new dice lists
-    new_die_a = [0] * 6
-    new_die_b = [0] * 6
-    
-    # Calculate the probability of each sum with the original dice
-    original_probabilities = {}
-    for a in die_a:
-        for b in die_b:
-            total = a + b
-            original_probabilities[total] = original_probabilities.get(total, 0) + 1
-    
-    # Calculate the total number of combinations with the original dice
-    total_combinations = sum(original_probabilities.values())
-    
-    # Calculate the probability of each sum with the new dice
-    new_probabilities = {}
-    for a in die_a:
-        for b in die_b:
-            total = a + b
-            new_probabilities[total] = new_probabilities.get(total, 0) + 1
-    
-    # Adjust the number of spots on Die B to maintain the same probabilities
-    for total, count in original_probabilities.items():
-        new_probabilities[total] = count / total_combinations
-    
-    # Reassign spots on Die A while respecting the constraint
-    for i, a in enumerate(die_a):
-        new_die_a[i] = min(4, a)
-    
-    # Reassign spots on Die B while allowing more than 6 spots
-    for i, b in enumerate(die_b):
-        # Calculate the difference between the original and new probabilities for the current sum
-        diff = new_probabilities[total] - original_probabilities[total]
-        # Adjust the spots on Die B based on the difference
-        new_die_b[i] = b + int(diff * total_combinations)
-    
-    return new_die_a, new_die_b
+def undoom_dice(Die_A, Die_B):
+    # Calculate the probabilities of each sum for the original dice (Die_A)
+    original_probs = {}
+    for i in range(1, 7):
+        for j in range(1, 7):
+            total = i + j
+            original_probs[total] = original_probs.get(total, 0) + 1
 
-# Input dice
-die_a = [1, 2, 3, 4, 5, 6]
-die_b = [1, 2, 3, 4, 5, 6]
+    # Calculate the probabilities of each sum for the new dice (Die_B)
+    new_probs = {}
+    for i in range(1, 7):
+        for j in range(1, 7):
+            total = i + j
+            new_probs[total] = new_probs.get(total, 0) + 1
 
-# Undoom the dice
-new_die_a, new_die_b = undoom_dice(die_a, die_b)
+    # Determine the scaling factor to adjust probabilities
+    scaling_factor = sum(original_probs.values()) / sum(new_probs.values())
 
-# Output the new dice
-print("New Die A:", new_die_a)
-print("New Die B:", new_die_b)
+    # Create the new dice (Die_B) with adjusted probabilities
+    New_Die_B = []
+    for i in range(1, 7):
+        for j in range(1, 7):
+            total = i + j
+            count = int(new_probs[total] * scaling_factor)
+            New_Die_B.extend([i] * count)
+
+    # Create the new dice (Die_A) with spots not exceeding 4
+    New_Die_A = [min(4, x) for x in Die_A]
+
+    return New_Die_A, New_Die_B
+
+# Example usage:
+Die_A = [1, 2, 3, 4, 5, 6]
+Die_B = Die_A
+New_Die_A, New_Die_B = undoom_dice(Die_A, Die_B)
+print("New Die A:", New_Die_A)
+print("New Die B:", New_Die_B)
