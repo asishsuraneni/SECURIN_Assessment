@@ -1,13 +1,18 @@
-# Initialize a 6x6 matrix to store the distribution
-distribution = [[0] * 6 for _ in range(6)]
+def calculate_combinations():
+    # Initialize an empty 6x6 matrix
+    combinations_matrix = [[0] * 6 for _ in range(6)]
 
-# Calculate the distribution
-for die_a in range(1, 7):
-    for die_b in range(1, 7):
-        total = die_a + die_b
-        distribution[die_a - 1][die_b - 1] += 1
+    # Fill in the matrix with sums of Die A and Die B
+    for i in range(6):
+        for j in range(6):
+            combinations_matrix[i][j] = i + j + 2
 
-# Print the distribution matrix
-print("Distribution of all possible combinations:")
-for row in distribution:
-    print(row)
+    return combinations_matrix
+
+def display_matrix(matrix):
+    for row in matrix:
+        print(row)
+
+if __name__ == "__main__":
+    combinations = calculate_combinations()
+    display_matrix(combinations)
